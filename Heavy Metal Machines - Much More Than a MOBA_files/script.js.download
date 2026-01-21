@@ -1,0 +1,85 @@
+var _____WB$wombat$assign$function_____=function(name){return (self._wb_wombat && self._wb_wombat.local_init && self._wb_wombat.local_init(name))||self[name];};if(!self.__WB_pmw){self.__WB_pmw=function(obj){this.__WB_source=obj;return this;}}{
+let window = _____WB$wombat$assign$function_____("window");
+let self = _____WB$wombat$assign$function_____("self");
+let document = _____WB$wombat$assign$function_____("document");
+let location = _____WB$wombat$assign$function_____("location");
+let top = _____WB$wombat$assign$function_____("top");
+let parent = _____WB$wombat$assign$function_____("parent");
+let frames = _____WB$wombat$assign$function_____("frames");
+let opens = _____WB$wombat$assign$function_____("opens");
+( function() {
+	document.addEventListener( 'DOMContentLoaded', function( event ) {
+
+		wpcf7_recaptcha.execute = function( action ) {
+			grecaptcha.execute(
+				wpcf7_recaptcha.sitekey,
+				{ action: action }
+			).then( function( token ) {
+				var event = new CustomEvent( 'wpcf7grecaptchaexecuted', {
+					detail: {
+						action: action,
+						token: token,
+					},
+				} );
+
+				document.dispatchEvent( event );
+			} );
+		};
+
+		wpcf7_recaptcha.execute_on_homepage = function() {
+			wpcf7_recaptcha.execute( wpcf7_recaptcha.actions[ 'homepage' ] );
+		};
+
+		wpcf7_recaptcha.execute_on_contactform = function() {
+			wpcf7_recaptcha.execute( wpcf7_recaptcha.actions[ 'contactform' ] );
+		};
+
+		grecaptcha.ready(
+			wpcf7_recaptcha.execute_on_homepage
+		);
+
+		document.addEventListener( 'change',
+			wpcf7_recaptcha.execute_on_contactform
+		);
+
+		document.addEventListener( 'wpcf7submit',
+			wpcf7_recaptcha.execute_on_homepage
+		);
+
+	} );
+
+	document.addEventListener( 'wpcf7grecaptchaexecuted', function( event ) {
+		var fields = document.querySelectorAll(
+			"form.wpcf7-form input[name='_wpcf7_recaptcha_response']"
+		);
+
+		for ( var i = 0; i < fields.length; i++ ) {
+			var field = fields[ i ];
+			field.setAttribute( 'value', event.detail.token );
+		}
+	} );
+
+} )();
+
+}
+
+/*
+     FILE ARCHIVED ON 23:16:43 Aug 31, 2021 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 14:57:07 Jan 21, 2026.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+*/
+/*
+playback timings (ms):
+  captures_list: 0.582
+  exclusion.robots: 0.016
+  exclusion.robots.policy: 0.007
+  esindex: 0.01
+  cdx.remote: 350.026
+  LoadShardBlock: 212.486 (6)
+  PetaboxLoader3.datanode: 265.974 (7)
+  load_resource: 270.271
+  PetaboxLoader3.resolve: 174.633
+*/

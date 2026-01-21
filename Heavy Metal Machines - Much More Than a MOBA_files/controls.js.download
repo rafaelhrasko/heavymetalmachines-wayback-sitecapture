@@ -1,0 +1,32 @@
+var _____WB$wombat$assign$function_____=function(name){return (self._wb_wombat && self._wb_wombat.local_init && self._wb_wombat.local_init(name))||self[name];};if(!self.__WB_pmw){self.__WB_pmw=function(obj){this.__WB_source=obj;return this;}}{
+let window = _____WB$wombat$assign$function_____("window");
+let self = _____WB$wombat$assign$function_____("self");
+let document = _____WB$wombat$assign$function_____("document");
+let location = _____WB$wombat$assign$function_____("location");
+let top = _____WB$wombat$assign$function_____("top");
+let parent = _____WB$wombat$assign$function_____("parent");
+let frames = _____WB$wombat$assign$function_____("frames");
+let opens = _____WB$wombat$assign$function_____("opens");
+"use strict";for(var meuBrowser=window.navigator.userAgent.toLowerCase(),scripts=document.getElementsByTagName("script"),controlsCurrentSrc=null,index=0;index<scripts.length;index++){var item=scripts[index];0<item.src.indexOf("controls.js")&&(controlsCurrentSrc=item.src)}function verifyPlatform(){meuBrowser.match(/playstation/i)?(ps4Displayed(),ps4Style(),setTimeout(function(){jQuery("#btn-toggle-ps4").click()},500)):meuBrowser.match(/xbox/i)&&(xboxDisplayed(),xboxStyle(),setTimeout(function(){jQuery("#btn-toggle-xbox").click()},500))}function xboxDisplayed(){jQuery(".controls-xbox-wrapper").addClass("controls-displayed")}function ps4Displayed(){jQuery(".controls-ps4-wrapper").addClass("controls-displayed")}function xboxStyle(){var e=document.getElementsByTagName("head")[0],t=document.createElement("link"),s=controlsCurrentSrc.substring(0,controlsCurrentSrc.lastIndexOf("/")+1);t.href=s+"../css/xboxFix.css",t.type="text/css",t.rel="stylesheet",e.append(t)}function ps4Style(){var e=document.getElementsByTagName("head")[0],t=document.createElement("link"),s=controlsCurrentSrc.substring(0,controlsCurrentSrc.lastIndexOf("/")+1);t.href=s+"../css/psFix.css",t.type="text/css",t.rel="stylesheet",e.append(t)}verifyPlatform(),jQuery("#btn-toggle-xbox, #btn-toggle-ps4").click(function(){var e=jQuery(this).parent();e.hasClass("controls-showing")?(e.removeClass("controls-showing"),jQuery(this).removeClass("arrow-to-up")):(e.addClass("controls-showing"),jQuery(this).addClass("arrow-to-up"))});
+}
+
+/*
+     FILE ARCHIVED ON 23:16:56 Aug 31, 2021 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 14:57:10 Jan 21, 2026.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+*/
+/*
+playback timings (ms):
+  captures_list: 0.587
+  exclusion.robots: 0.021
+  exclusion.robots.policy: 0.01
+  esindex: 0.013
+  cdx.remote: 18.085
+  LoadShardBlock: 97.49 (3)
+  PetaboxLoader3.datanode: 72.684 (4)
+  load_resource: 91.663
+  PetaboxLoader3.resolve: 69.65
+*/

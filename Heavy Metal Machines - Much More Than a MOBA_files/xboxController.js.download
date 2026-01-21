@@ -1,0 +1,729 @@
+var _____WB$wombat$assign$function_____=function(name){return (self._wb_wombat && self._wb_wombat.local_init && self._wb_wombat.local_init(name))||self[name];};if(!self.__WB_pmw){self.__WB_pmw=function(obj){this.__WB_source=obj;return this;}}{
+let window = _____WB$wombat$assign$function_____("window");
+let self = _____WB$wombat$assign$function_____("self");
+let document = _____WB$wombat$assign$function_____("document");
+let location = _____WB$wombat$assign$function_____("location");
+let top = _____WB$wombat$assign$function_____("top");
+let parent = _____WB$wombat$assign$function_____("parent");
+let frames = _____WB$wombat$assign$function_____("frames");
+let opens = _____WB$wombat$assign$function_____("opens");
+jQuery(function() {
+
+  var xboxController = {
+    pxgamepad : null,
+    currentFocused : null,
+    timestamp : 0,
+    lastTimestamp : 0,
+
+    timeForFire : 5,
+
+    next : function() {
+      var next = this.findNextElement();
+      // console.log(next)
+      // xboxController.currentFocused = next;
+      this.setFocusedElement(next);
+    },
+  
+    previews : function() {
+      var previews = this.findPreviewsElement();
+      // console.log(previews)
+      // xboxController.currentFocused = previews;
+      this.setFocusedElement(previews);
+    },
+
+    goRight : function() {
+      xboxController.currentFocused = this.getFocusedElement();
+
+      let closest = this.findClosestElement('right', xboxController.currentFocused );
+      // console.log('closest: ', closest)
+      // xboxController.currentFocused = closest;
+      this.setFocusedElement(closest);
+    },
+
+
+    goLeft : function() {
+      xboxController.currentFocused = this.getFocusedElement();
+
+      let closest = this.findClosestElement('left', xboxController.currentFocused );
+      // console.log('closest: ', closest)
+      // xboxController.currentFocused = closest;
+      this.setFocusedElement(closest);
+    },
+
+    goUp : function() {
+      xboxController.currentFocused = this.getFocusedElement();
+
+      let closest = this.findClosestElement('top', xboxController.currentFocused );
+      // console.log('closest: ', closest)
+      // xboxController.currentFocused = closest;
+      this.setFocusedElement(closest);
+    },
+
+    leftStick : function() {
+      console.log(this.pxgamepad.leftStick);
+    },
+
+    rightStick : function() {
+
+    },
+
+    moveLeftStick : function(leftStick) {
+      let content = jQuery(".scroller");
+
+      if (content == null) {
+        content = window;
+      }
+
+      let position = jQuery(content).left();
+
+      if (rightStick.x > 0.85 && rightStick.x <= 1) {
+
+        position=position+20;
+      } if (rightStick.x < -0.85 && rightStick.x >= -1) {
+        position=position-20;
+      }
+
+      // console.log( 'scrollTop: ', );
+
+      jQuery(content).left( position )
+
+    },
+
+    moveRightStick : function(rightStick) {
+
+      let content = jQuery(".scroller");
+
+      if (content == null) {
+        content = window;
+      }
+
+      let position = jQuery(content).scrollTop();
+
+      if (rightStick.y > 0.85 && rightStick.y <= 1) {
+
+        position=position+20;
+      } if (rightStick.y < -0.85 && rightStick.y >= -1) {
+        position=position-20;
+      }
+
+      // console.log( 'scrollTop: ', );
+
+      jQuery(content).scrollTop( position )
+
+    },
+
+    goDown : function() {
+      xboxController.currentFocused = this.getFocusedElement();
+
+      let closest = this.findClosestElement('bottom', xboxController.currentFocused );
+      // console.log('closest: ', closest)
+      // xboxController.currentFocused = closest;
+      this.setFocusedElement(closest);
+    },
+  
+    aPressed : function() {
+
+      if (this.checkSameKeyPress() ) return;
+
+      xboxController.currentFocused = this.getFocusedElement();
+  
+      // console.log('aPressed:click', focused)
+      jQuery(xboxController.currentFocused).trigger('click');
+
+      this.updateTime();
+    },
+  
+    bPressed : function() {
+
+      if (this.checkSameKeyPress() ) return;
+
+      xboxController.currentFocused = this.getFocusedElement();
+  
+      // jQuery(focused).trigger('click');
+
+      this.updateTime();
+    },
+  
+    xPressed : function() {
+
+      if (this.checkSameKeyPress() ) return;
+
+      xboxController.currentFocused = this.getFocusedElement();
+  
+      // jQuery(focused).trigger('click');
+
+      this.updateTime();
+    },
+  
+    yPressed : function() {
+
+      if (this.checkSameKeyPress() ) return;
+
+      xboxController.currentFocused = this.getFocusedElement();
+  
+      // jQuery(focused).trigger('click');
+
+      this.updateTime();
+    },
+
+    leftTopPressed : function() {
+      window.history.back();
+    },
+
+    rightTopPressed : function() {
+      window.history.forward();
+    },
+
+    findClickableElements : function() {
+          // Find all focusable children
+          let focusableElementsString = 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex="0"], [contenteditable]';
+  
+          let originFocusableElements = document.querySelectorAll(focusableElementsString);
+          // Convert NodeList to Array
+          originFocusableElements = Array.prototype.slice.call(originFocusableElements);
+
+          let newFocusableElements = [];
+          let newIndex=0;
+          for (let idx in originFocusableElements) {
+            let element = originFocusableElements[idx];
+            // console.log(element)
+            // console.log(element.style.display)
+            if (element.style.display == 'none') {
+              // originFocusableElements[idx] = null;
+              // originFocusableElements.splice(idx, 1);
+              continue;
+            }
+            if ( ! jQuery(element).is(":visible") ) {
+              // originFocusableElements[idx] = null;
+              // originFocusableElements.splice(idx, 1);
+              continue;
+            }
+
+            if ( jQuery(element).attr("disabled") == 'disabled' ) {
+              // originFocusableElements[idx] = null;
+              // originFocusableElements.splice(idx, 1);
+              continue;
+            }
+    
+            if ( jQuery(element).attr("tabindex") == "-1" ) {
+              // originFocusableElements[idx] = null;
+              // originFocusableElements.splice(idx, 1);
+              continue;
+            }
+            
+            newFocusableElements[newIndex] = element;
+            newIndex++;
+          }
+
+          // console.log(originFocusableElements);
+
+          return newFocusableElements;
+    },
+  
+    getFocusedElement : function() {
+      // return xboxController.currentFocused;
+      let elementFocus = jQuery(document).find(":focus")[0];
+      // console.log('elementFocus', elementFocus);
+      return elementFocus;
+    },
+
+    setFocusedElement : function(element) {
+      xboxController.currentFocused = element;
+
+      jQuery(xboxController.currentFocused).trigger('focus');
+
+      this.moveCursorToFocusedElement(xboxController.currentFocused);
+    },
+
+    moveCursorToFocusedElement : function(element) {
+      if (element == null) return;
+
+      let eTop = jQuery(element).offset().top;
+      let eLeft = jQuery(element).offset().left;
+      let eWidth = jQuery(element).width();
+      let eHeight = jQuery(element).height();
+
+      let cursor = document.getElementById('xboxControllerCursor');
+      
+      if (cursor == null) {
+        cursor = document.createElement('div');
+        cursor.id = 'xboxControllerCursor';
+        // cursor.src = 'web/img/cursor/pointer.svg';
+        // cursor.style.zIndex = '10000';
+        // cursor.style.width = '50px';
+        // cursor.style.position = 'absolute';
+        // cursor.style.display = 'inline-block';
+
+        document.body.append(cursor);
+      }
+      // cursor.style.top = (eTop + (eHeight / 2) ) + 'px';
+      // cursor.style.left = (eLeft + (eWidth / 2) ) + 'px';
+
+      jQuery(cursor).animate({
+        top: (eTop + (eHeight / 2)  ) + 'px',
+        left: (eLeft + (eWidth / 2)  ) + 'px'
+      }, 100);
+
+    },
+
+    findClosestElement : function(position, object) {
+
+      if (this.checkSameKeyPress() ) return xboxController.currentFocused;
+
+      let clickable = this.findClickableElements();
+
+      let isFamilyObjects = false;
+      
+      console.log('clickable', clickable);
+
+      let elementFamily = this.checkObjectInsideAList(object, position);
+      
+      console.log('family', elementFamily);
+      
+      if (elementFamily != null) {
+        clickable = elementFamily;
+        isFamilyObjects = true;
+      }
+
+      // console.log(clickable);
+      
+      console.log('object', object);
+      if (object == null) {
+        return clickable[0];
+      }
+
+      console.log('object', object, 'clickable', clickable)
+
+      let closestPosition = 99999999999;
+      let closestElement = null;
+
+      let secondClosestElement = null;
+      let secondClosestPosition = 9999999999;
+
+
+      let currentObjectBottom = jQuery(object).offset().top + jQuery(object).height();
+      let currentObjectLeft = jQuery(object).offset().left;
+      let currentObjectTop = jQuery(object).offset().top;
+      let currentObjectRight = jQuery(object).offset().left + jQuery(object).width();
+      let currentObjectWidth = jQuery(object).width();
+
+      for (let idx in clickable) {
+        let element = clickable[idx];
+
+        if ( jQuery(element).is('disabled') ) {
+          continue;
+        }
+
+        if (element === object) continue;
+        
+        // console.log(element);
+
+        if (element == null || element == 'undefined') {
+          continue;
+        }
+
+        let loopElementTop = jQuery(element).offset().top;
+        let loopElementBottom = jQuery(element).offset().top + jQuery(element).height();
+        let loopElementRight = jQuery(element).offset().left + jQuery(element).width();
+        let loopElementLeft = jQuery(element).offset().left;
+
+        if (position == 'left') {
+
+          delta = currentObjectLeft - loopElementRight;
+
+          if (currentObjectLeft < loopElementRight) {
+            continue;
+          }
+
+          if (secondClosestPosition > delta) {
+            secondClosestPosition = delta;
+            secondClosestElement = element;
+          }
+
+          // deltaTop = Math.abs(loopElementTop - currentObjectTop);
+          // deltaBottom = Math.abs(loopElementBottom - currentObjectBottom);
+
+          if (loopElementBottom < currentObjectTop) {
+            continue;
+          }
+
+          if (loopElementTop > currentObjectBottom) {
+            continue;
+          }
+
+
+        } else if (position == 'right') {
+
+          if (currentObjectRight > loopElementLeft) {
+            continue;
+          }
+          
+          delta = loopElementLeft - currentObjectRight;
+
+          if (secondClosestPosition > delta) {
+            secondClosestPosition = delta;
+            secondClosestElement = element;
+          }
+
+          if (loopElementBottom < currentObjectTop) {
+            continue;
+          }
+          
+          if (loopElementTop > currentObjectBottom) {
+            continue;
+          }
+
+          // deltaTop = Math.abs(loopElementTop - currentObjectTop);
+          // deltaBottom = Math.abs(loopElementTop - currentObjectTop);
+
+          
+        } else if (position == 'top') {
+          
+          if (currentObjectTop < loopElementBottom) {
+            continue;
+          }
+
+          delta = currentObjectTop - loopElementBottom;
+
+          if (secondClosestPosition > delta) {
+            secondClosestPosition = delta;
+            secondClosestElement = element;
+          }
+
+          if (currentObjectLeft > loopElementRight) {
+            continue;
+          }
+          
+          if (currentObjectRight < loopElementLeft) { 
+            continue;
+          }
+
+        } else if (position == 'bottom') {
+
+          if (currentObjectBottom > loopElementTop) {
+            // console.log('bottom está para cima')
+            continue;
+          }
+          
+          delta = loopElementTop - currentObjectBottom;
+
+          if (secondClosestPosition > delta) {
+            secondClosestPosition = delta;
+            secondClosestElement = element;
+          }
+
+          if (currentObjectLeft > loopElementRight) {
+            continue;
+          }
+          
+          if (currentObjectRight < loopElementLeft) { 
+            continue;
+          }
+        }
+
+        // console.log('deltaLeft', deltaLeft);
+        // console.log('deltaRight', deltaRight);
+        // console.log('deltaBottom', deltaBottom);
+        // console.log('deltaTop', deltaTop);
+
+        // console.log('delta < closestPosition')
+        // console.log('closestPosition', closestPosition);
+        // console.log('delta', delta)
+
+        if (delta < closestPosition ) {
+          closestElement = element;
+          closestPosition = delta;
+        }
+
+      }
+
+      if (closestElement == null ) {
+
+        if (secondClosestElement == null) {
+          if (position == 'bottom') {
+            closestElement = clickable[0];
+          } else if (position == 'top') {
+            if (isFamilyObjects) {
+              closestElement = clickable[1];
+            } else {
+              closestElement = clickable[ clickable.length -1 ];
+            }
+          }
+        } else {
+          closestElement = secondClosestElement;
+        }
+      }
+
+      this.updateTime();
+
+      console.log(closestElement)
+
+      return closestElement;
+    },
+
+    checkSameKeyPress : function() {
+
+      if (this.lastTimestamp == this.timestamp || (this.timestamp - this.lastTimestamp) < this.timeForFire ) return true;
+
+      return false;
+
+    },
+
+    updateTime : function() {
+
+      this.lastTimestamp = this.timestamp;
+
+    },
+
+    checkObjectInsideAList : function(object, position) {
+      if (object == null) return null;
+      
+      let current = jQuery(object).parent()[0];
+      
+      if ( jQuery(object).hasClass('label-multiselect') || jQuery(current).hasClass('checkboxes') ) {
+
+        if (jQuery(current).hasClass('checkboxes')) {
+          object = current;
+        }
+        let multiselect = jQuery(object).parent()[0];
+        let checkboxes = jQuery(multiselect).find('div.checkboxes')[0]
+
+        if (!jQuery(checkboxes).is(':visible')) {
+          return null;
+        }
+
+        let msfamily = jQuery(checkboxes).find('[tabindex="0"]').toArray();
+        msfamily.unshift(multiselect);
+
+        return msfamily;
+      }
+
+      for (let i=0;i<=5;i++) {
+        let tab = null;
+        try {
+          tab = jQuery(current).attr("group-list");
+        } catch(e){}
+        // console.log('checkObjectInsideAList');
+        // console.log(current);
+        // console.log(tab);
+        // console.log('---')
+
+        if ( undefined != tab && null != tab) {
+          if (jQuery(current).attr('group-list') == "1") {
+
+
+
+            let focusableElementsString = 'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex="0"], [contenteditable]';
+            let originFocusableElements = current.querySelectorAll(focusableElementsString);
+            // Convert NodeList to Array
+            let family = Array.prototype.slice.call(originFocusableElements);
+
+
+
+
+            // let family = jQuery(current).find('[tabindex="0"]').toArray();
+            
+            console.log('found family', family)
+
+            if ( (object == family[0] && position == 'top') || (object == family[family.length - 1] && position == 'bottom') ) {
+              return null;
+            }
+            
+            family.unshift(current);
+
+            return family;
+          }
+        }
+        current = jQuery(current).parent()[0];
+      }
+      return null;
+    },
+  
+    findNextElement : function() {
+      var clickable = this.findClickableElements();
+      var currentElement = this.getFocusedElement();
+
+      var found = false;
+      var next = null;
+      // console.log('currentElement', currentElement)
+
+      for (let idx in clickable) {
+      // clickable.map(function(element) {
+
+        let element = clickable[idx];
+
+        if ( found ) {
+          next = element;
+          found = false;
+        }
+  
+        // console.log('element', element)
+        if (element == currentElement) {
+          // console.log(element);
+          found = true;
+        }
+        
+      };
+  
+      if (next == null) {
+        next = clickable[0];
+      }
+  
+      return next;
+    },
+  
+    findPreviewsElement : function() {
+
+      var clickable = this.findClickableElements();
+      var currentElement = this.getFocusedElement();
+  
+      var found = false;
+      var previews = null;
+      // console.log('currentElement', currentElement)
+      for (let idx in clickable) {
+        // clickable.map(function(element) {
+
+        let element = clickable[idx];
+
+        if ( ! jQuery(element).is(":visible") ) {
+          continue;
+        }
+          
+        if ( jQuery(element).attr("tabindex") == "-1" ) {
+          continue;
+        }
+  
+        // console.log('element', element)
+        if (element == currentElement) {
+          // console.log(element);
+          found = true;
+        }
+  
+        if ( found === false ) {
+          previews = element;
+        }
+      };
+  
+      if (previews == null) {
+        previews = clickable[ clickable.length - 1 ];
+      }
+  
+      return previews;
+    },
+
+    init : function() {
+
+      this.pxgamepad = new PxGamepad();
+      this.pxgamepad.start();
+      
+      setInterval(function() {
+        var gamepad = xboxController.pxgamepad.getGamepad();
+    
+        if (gamepad) {
+          xboxController.pxgamepad.update();
+
+          xboxController.timestamp = gamepad.timestamp;
+          
+          if (xboxController.pxgamepad.buttons["dpadUp"]) {
+            xboxController.goUp();
+            console.log('dpadUp pressed')
+          }
+          if (xboxController.pxgamepad.buttons["dpadDown"]) {
+            xboxController.goDown();
+            console.log('dpadDown pressed')
+          }
+          if (xboxController.pxgamepad.buttons["dpadLeft"]) {
+            xboxController.goLeft();
+            console.log('dpadLeft pressed')
+          }
+          if (xboxController.pxgamepad.buttons["dpadRight"]) {
+            xboxController.goRight();
+            console.log('dpadRight pressed')
+          }
+          if (xboxController.pxgamepad.buttons["a"]) {
+            xboxController.aPressed();
+            console.log('a pressed')
+          }
+          if (xboxController.pxgamepad.buttons["b"]) {
+            xboxController.bPressed();
+            console.log('b pressed')
+          }
+          if (xboxController.pxgamepad.buttons["x"]) {
+            xboxController.xPressed();
+            console.log('x pressed')
+          }
+          if (xboxController.pxgamepad.buttons["y"]) {
+            xboxController.yPressed();
+            console.log('y pressed')
+          }
+          if (xboxController.pxgamepad.buttons["select"]) {
+            xboxController.selectPressed();
+            console.log('select pressed')
+          }
+          if (xboxController.pxgamepad.buttons["start"]) {
+            xboxController.startPressed();
+            console.log('start pressed')
+          }
+          if (xboxController.pxgamepad.buttons["leftTop"]) {
+            xboxController.leftTopPressed();
+            console.log('leftTopPressed pressed')
+          }
+          if (xboxController.pxgamepad.buttons["rightTop"]) {
+            xboxController.rightTopPressed();
+            console.log("rightTopPressed pressed")
+          }
+          if (xboxController.pxgamepad.buttons["leftStick"]) {
+            xboxController.leftStick();
+            console.log("leftStick pressed")
+          }
+          if (xboxController.pxgamepad.buttons["rightStick"]) {
+            xboxController.rightStick();
+            console.log("rightStick pressed")
+          }
+
+          if (xboxController.pxgamepad.leftStick.x != 0 || xboxController.pxgamepad.leftStick.y != 0) {
+            xboxController.moveLeftStick(xboxController.pxgamepad.leftStick);
+          }
+
+          if (xboxController.pxgamepad.rightStick.x != 0 || xboxController.pxgamepad.rightStick.y != 0) {
+            xboxController.moveRightStick(xboxController.pxgamepad.rightStick);
+          }
+
+          // console.log(xboxController.pxgamepad.leftStick);
+    
+        }
+      }, 100);
+    }
+  
+  }
+  
+  xboxController.init();    
+
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+});
+
+}
+
+/*
+     FILE ARCHIVED ON 23:16:50 Aug 31, 2021 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 14:57:10 Jan 21, 2026.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+*/
+/*
+playback timings (ms):
+  captures_list: 0.717
+  exclusion.robots: 0.027
+  exclusion.robots.policy: 0.011
+  esindex: 0.013
+  cdx.remote: 51.27
+  LoadShardBlock: 109.871 (3)
+  PetaboxLoader3.datanode: 118.261 (4)
+  load_resource: 167.506
+  PetaboxLoader3.resolve: 140.752
+*/
