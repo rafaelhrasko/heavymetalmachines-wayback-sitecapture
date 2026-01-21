@@ -535,8 +535,16 @@ body.wm-modal #donato #donato-base {
   line-height: 1.4;
   border-bottom: 1px solid #ffe69c;
   box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 .archive-banner strong {
   margin-right: 4px;
+}
+
+.archive-banner a {
+  color: inherit;
+  text-decoration: underline;
 }
