@@ -535,9 +535,12 @@ body.wm-modal #donato #donato-base {
   line-height: 1.4;
   border-bottom: 1px solid #ffe69c;
   box-sizing: border-box;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 9999;
 }
 
 .archive-banner strong {
@@ -547,4 +550,8 @@ body.wm-modal #donato #donato-base {
 .archive-banner a {
   color: inherit;
   text-decoration: underline;
+}
+
+body {
+    padding-bottom: 60px; /* Prevents content from being hidden */
 }
